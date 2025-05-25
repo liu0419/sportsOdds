@@ -2,7 +2,7 @@ import SwiftUI
 
 struct OddsDetailViewT: View {
     let sport: Sport
-
+    
     @State private var odds: [OddsResponse] = [
         OddsResponse(
             id: "6186c58f73be7feaea5a268a1c6cf519",
@@ -129,7 +129,7 @@ struct OddsDetailViewT: View {
             ]
         )
     ]
-
+    
     var body: some View {
         ScrollView {
             VStack(spacing: 16) {
@@ -143,48 +143,48 @@ struct OddsDetailViewT: View {
                                     .foregroundColor(.blue)
                                     .frame(maxWidth: .infinity, alignment: .center)
                             }
-
+                            
                             HStack {
                                 Text(match.home_team)
                                     .font(.headline)
                                     .bold()
                                     .lineLimit(1)
                                     .minimumScaleFactor(0.6)
-                                    .frame(maxWidth: .infinity, alignment: .leading)
-
+                                    .frame(maxWidth: .infinity, alignment: .center)
+                                
                                 Text("vs")
                                     .font(.subheadline)
                                     .foregroundColor(.gray)
-
+                                
                                 Text(match.away_team)
                                     .font(.headline)
                                     .bold()
                                     .lineLimit(1)
                                     .minimumScaleFactor(0.6)
-                                    .frame(maxWidth: .infinity, alignment: .trailing)
+                                    .frame(maxWidth: .infinity, alignment: .center)
                             }                        }
-
+                        
                         // 📊 Bookmakers
                         ForEach(match.bookmakers) { bookmaker in
                             if let market = bookmaker.markets.first,
                                market.outcomes.count >= 2 {
                                 let outcome1 = market.outcomes[0]
                                 let outcome2 = market.outcomes[1]
-
+                                
                                 HStack {
                                     VStack(alignment: .leading) {
                                         Text(String(format: "%.2f", outcome1.price))
                                             .bold()
                                     }
-
+                                    
                                     Spacer()
-
+                                    
                                     Text(bookmaker.title)
                                         .font(.footnote)
                                         .foregroundColor(.secondary)
-
+                                    
                                     Spacer()
-
+                                    
                                     VStack(alignment: .trailing) {
                                         Text(String(format: "%.2f", outcome2.price))
                                             .bold()
