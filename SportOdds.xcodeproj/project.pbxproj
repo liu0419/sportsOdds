@@ -7,11 +7,13 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		7C0701E92DE4A0440027E6F7 /*  ParlayCalculator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C0701E82DE4A0440027E6F7 /*  ParlayCalculator.swift */; };
 		7C4441BD2DDC67FE00EA3325 /* Secrets.plist in Resources */ = {isa = PBXBuildFile; fileRef = 7C4441BC2DDC67FD00EA3325 /* Secrets.plist */; };
 		7C4441BF2DDC6A5200EA3325 /* .gitignore in Resources */ = {isa = PBXBuildFile; fileRef = 7C4441BE2DDC6A5200EA3325 /* .gitignore */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		7C0701E82DE4A0440027E6F7 /*  ParlayCalculator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = " ParlayCalculator.swift"; sourceTree = "<group>"; };
 		7C4441BC2DDC67FD00EA3325 /* Secrets.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Secrets.plist; sourceTree = "<group>"; };
 		7C4441BE2DDC6A5200EA3325 /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
 		7CEC617D2DDB104D00EFDEDB /* SportOdds.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SportOdds.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -49,6 +51,7 @@
 		7CEC61742DDB104D00EFDEDB = {
 			isa = PBXGroup;
 			children = (
+				7C0701E82DE4A0440027E6F7 /*  ParlayCalculator.swift */,
 				7C4441BC2DDC67FD00EA3325 /* Secrets.plist */,
 				7CEC617F2DDB104D00EFDEDB /* SportOdds */,
 				7CEC617E2DDB104D00EFDEDB /* Products */,
@@ -144,6 +147,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7C0701E92DE4A0440027E6F7 /*  ParlayCalculator.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
