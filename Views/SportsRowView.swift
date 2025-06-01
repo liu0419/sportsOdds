@@ -13,14 +13,14 @@ struct SportRowView: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 4) {
             Text(sport.title)
-                .font(.headline)
+                .font(.title3.bold())
             Text(sport.description)
-                .font(.subheadline)
-                .foregroundColor(.secondary)
+                .font(.body)
+                .foregroundColor(Color("RoseGold"))
             Text("Group: \(sport.group)")
-                .font(.caption)
+                .font(.callout)
                 .foregroundColor(.gray)
         }
-        .padding(.vertical, 4)
+        .padding(.vertical, 6)
     }
 }
