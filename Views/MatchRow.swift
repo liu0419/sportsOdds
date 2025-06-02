@@ -9,29 +9,36 @@ import SwiftUI
 
 struct MatchRow: View {
     let match: OddsResponse
+    @State private var isHovering = false
 
     var body: some View {
         VStack(spacing: 8) {
             if let date = ISO8601DateFormatter().date(from: match.commence_time) {
                 Text(date.formatted(date: .abbreviated, time: .shortened))
                     .font(.subheadline)
-                    .foregroundColor(.blue)
+                    .foregroundColor(.white.opacity(0.8))
                     .frame(maxWidth: .infinity)
             }
             HStack {
                 Text(match.home_team)
                     .font(.headline).bold()
+                    .foregroundColor(.white)
                     .frame(maxWidth: .infinity, alignment: .leading)
                 Text("vs")
-                    .foregroundColor(.gray)
+                    .foregroundColor(Color("RoseGold"))
                 Text(match.away_team)
                     .font(.headline).bold()
+                    .foregroundColor(.white)
                     .frame(maxWidth: .infinity, alignment: .trailing)
             }
         }
         .padding()
-        .background(Color.white)
+        .background(Color("LightPurple"))
+        .overlay(
+            RoundedRectangle(cornerRadius: 12)
+                .stroke(Color.white, lineWidth: 2.5)
+        )
         .cornerRadius(12)
-        .shadow(color: .gray.opacity(0.2), radius: 4, x: 0, y: 2)
+        .onHover { hovering in isHovering = hovering }
     }
 }
