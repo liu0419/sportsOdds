@@ -1,21 +1,14 @@
-//
-//  DetailView.swift
-//  SportOdds
-//
-//  Created by 劉丞晏 on 2025/5/25.
-//
-
 import SwiftUI
 
 struct MatchOddsDetailView: View {
     let match: OddsResponse
-    
+
     enum SortBy {
         case none, outcome1, outcome2
     }
-    
+
     @State private var sortBy: SortBy = .none
-    
+
     var body: some View {
         ScrollView {
             VStack(spacing: 16) {
@@ -25,36 +18,67 @@ struct MatchOddsDetailView: View {
                         .font(.subheadline)
                         .foregroundColor(.white)
                 }
+
+                // 🖼️ 圖片與隊伍名稱展示區（已更新）
                 HStack(alignment: .top, spacing: 16) {
                     VStack {
-                        ForEach(match.home_team.split(separator: " "), id: \.self) { word in
-                            Text(String(word))
-                                .font(.title.bold())
+                        ZStack(alignment: .bottom) {
+                            Image(match.home_team)
+                                .resizable()
+                                .aspectRatio(contentMode: .fit)
+                                .frame(width: 140, height: 140)
+                                .padding(6)
+                                .background(
+                                    RoundedRectangle(cornerRadius: 20)
+                                        .fill(Color.white.opacity(0.05))
+                                )
+                                .clipShape(RoundedRectangle(cornerRadius: 20))
+                                .shadow(color: .black.opacity(0.3), radius: 4, x: 0, y: 2)
+                            Text(match.home_team)
+                                .font(.caption.bold())
                                 .foregroundColor(.white)
+                                .padding(4)
+                                .background(Color.black.opacity(0.5))
+                                .clipShape(RoundedRectangle(cornerRadius: 4))
                         }
                     }
-                    Spacer()
+
+
                     VStack {
                         Text("vs")
                             .font(.title.bold())
                             .foregroundColor(.white)
-                            .frame(width: 50, height: 50)
-                            .background(Circle().fill(Color.black.opacity(0.2)))
-                            .overlay(Circle().stroke(Color.white, lineWidth: 1))
-                            .padding(.top, 8)
+                            .frame(width: 60, height: 60)
+                            .background(Circle().fill(Color.black.opacity(0.3)))
                     }
-                    Spacer()
+                    .frame(maxHeight: .infinity)
+
                     VStack {
-                        ForEach(match.away_team.split(separator: " "), id: \.self) { word in
-                            Text(String(word))
-                                .font(.title.bold())
+                        ZStack(alignment: .bottom) {
+                            Image(match.away_team)
+                                .resizable()
+                                .aspectRatio(contentMode: .fit)
+                                .frame(width: 140, height: 140)
+                                .padding(6)
+                                .background(
+                                    RoundedRectangle(cornerRadius: 20)
+                                        .fill(Color.white.opacity(0.05))
+                                )
+                                .clipShape(RoundedRectangle(cornerRadius: 20))
+                                .shadow(color: .black.opacity(0.3), radius: 4, x: 0, y: 2)
+                            Text(match.away_team)
+                                .font(.caption.bold())
                                 .foregroundColor(.white)
+                                .padding(4)
+                                .background(Color.black.opacity(0.5))
+                                .clipShape(RoundedRectangle(cornerRadius: 4))
                         }
                     }
                 }
                 .padding(.horizontal)
                 
-                // 🔀 Sort Button Group (Custom Style)
+
+                // 🔀 Sort Button Group
                 HStack(spacing: 12) {
                     ForEach([SortBy.none, SortBy.outcome1, SortBy.outcome2], id: \.self) { option in
                         let label: String = {
@@ -64,14 +88,14 @@ struct MatchOddsDetailView: View {
                             case .outcome2: return "Sort by Away"
                             }
                         }()
-                        
+
                         Button(action: {
                             sortBy = option
                         }) {
                             Text(label)
                                 .font(.subheadline)
-                                .padding(.vertical, 8)
-                                .padding(.horizontal, 16)
+                                .frame(minWidth: 80, maxWidth: .infinity)
+                                .padding(.vertical, 10)
                                 .background(sortBy == option ? Color("WimbledonBackground").opacity(0.3) : Color.clear)
                                 .foregroundColor(Color("RoseGold"))
                                 .overlay(
@@ -80,11 +104,12 @@ struct MatchOddsDetailView: View {
                                 )
                                 .cornerRadius(8)
                         }
+                        .frame(maxWidth: .infinity)
                     }
                 }
                 .padding(.horizontal)
-                
-                // 📊 Bookmakers
+
+                // 📊 Bookmakers 賠率區
                 let sortedBookmakers = match.bookmakers.sorted { a, b in
                     guard let aMarket = a.markets.first,
                           let bMarket = b.markets.first,
@@ -100,19 +125,19 @@ struct MatchOddsDetailView: View {
                     case .none: return false
                     }
                 }
-                
+
                 ForEach(sortedBookmakers) { bookmaker in
                     if let market = bookmaker.markets.first {
                         let homeOutcome = market.outcomes.first {
                             $0.name.trimmingCharacters(in: .whitespacesAndNewlines).lowercased() ==
                             match.home_team.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
                         }
-                        
+
                         let awayOutcome = market.outcomes.first {
                             $0.name.trimmingCharacters(in: .whitespacesAndNewlines).lowercased() ==
                             match.away_team.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
                         }
-                        
+
                         HStack {
                             VStack(alignment: .leading) {
                                 Text(match.home_team)
@@ -122,15 +147,17 @@ struct MatchOddsDetailView: View {
                                 Text(String(format: "%.2f", homeOutcome?.price ?? 0))
                                     .bold()
                                     .foregroundColor(Color("RoseGold"))
-                                
                             }
+
                             Spacer()
+
                             Text(bookmaker.title)
                                 .font(.footnote)
                                 .foregroundColor(Color("RoseGold"))
                                 .bold()
-                            
+
                             Spacer()
+
                             VStack(alignment: .trailing) {
                                 Text(match.away_team)
                                     .font(.footnote)
@@ -159,6 +186,8 @@ struct MatchOddsDetailView: View {
         .background(Color("DarkPurple"))
     }
 }
+
+
 #Preview {
     MatchOddsDetailView(match: OddsResponse(
         id: "match1",
