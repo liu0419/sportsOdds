@@ -18,15 +18,29 @@ struct OddsDetailView: View {
                     .frame(maxWidth: .infinity)
                     .clipped()
                 
-                Picker("", selection: $mode) {
-                    Text("賽事列表").foregroundColor(Color("RoseGold")).tag(Mode.list)
-                    Text("串關模式").foregroundColor(Color("RoseGold")).tag(Mode.parlay)
+                Spacer()
+                
+                HStack(spacing: 12) {
+                    ForEach([Mode.list, Mode.parlay], id: \.self) { option in
+                        let label = option == .list ? "賽事列表" : "串關模式"
+                        Button(action: {
+                            mode = option
+                        }) {
+                            Text(label)
+                                .font(.subheadline)
+                                .bold()
+                                .padding(.vertical, 8)
+                                .padding(.horizontal, 16)
+                                .background(mode == option ? Color("RoseGold").opacity(0.25) : Color.clear)
+                                .foregroundColor(mode == option ? Color("RoseGold") : Color.white.opacity(0.7))
+                                .overlay(
+                                    RoundedRectangle(cornerRadius: 8)
+                                        .stroke(mode == option ? Color("RoseGold") : Color.white.opacity(0.4), lineWidth: 1)
+                                )
+                                .cornerRadius(8)
+                        }
+                    }
                 }
-                .pickerStyle(.segmented)
-                .foregroundColor(Color("RoseGold"))
-                .padding(8)
-                .background(Color("DarkPurple").opacity(0.5))
-                .clipShape(RoundedRectangle(cornerRadius: 8))
                 .padding(.horizontal)
                 
                 if let error = viewModel.errorMessage {
@@ -41,7 +55,8 @@ struct OddsDetailView: View {
                                 ForEach(viewModel.odds) { match in
                                     NavigationLink(destination: MatchOddsDetailView(match: match)) {
                                         MatchRow(match: match)
-                                            .background(Color.white.opacity(0.8))
+                                            .foregroundColor(Color("RoseGold"))
+                                            .background(Color("WimbledonBackground").opacity(0.3))
                                             .overlay(
                                                 RoundedRectangle(cornerRadius: 8)
                                                     .stroke(Color.purple.opacity(0.7), lineWidth: 1)

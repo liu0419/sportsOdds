@@ -20,6 +20,7 @@ struct ParlayResultView: View {
                 Text("📊 串關賠率比較")
                     .font(.title2)
                     .bold()
+                    .foregroundColor(.white)
                 
                 if selections.count < 2 {
                     Text("請至少選擇兩場比賽")
@@ -34,9 +35,11 @@ struct ParlayResultView: View {
                         ForEach(results.sorted(by: { $0.odds > $1.odds }), id: \.bookmaker.key) { item in
                             HStack {
                                 Text(item.bookmaker.title)
+                                    .foregroundColor(.white)
                                 Spacer()
                                 Text(String(format: "%.2f", item.odds))
                                     .bold()
+                                    .foregroundColor(.white)
                             }
                             .padding(.horizontal)
                         }
@@ -46,6 +49,7 @@ struct ParlayResultView: View {
                 Spacer()
             }
             .padding()
+            .foregroundColor(.white)
         }
     }
 }

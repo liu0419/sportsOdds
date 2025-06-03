@@ -20,35 +20,69 @@ struct MatchOddsDetailView: View {
         ScrollView {
             VStack(spacing: 16) {
                 // 📌 Header: 比賽資訊
-                VStack(spacing: 8) {
-                    if let date = ISO8601DateFormatter().date(from: match.commence_time) {
-                        Text(date.formatted(date: .abbreviated, time: .shortened))
-                            .font(.subheadline)
-                            .foregroundColor(.blue)
+                if let date = ISO8601DateFormatter().date(from: match.commence_time) {
+                    Text(date.formatted(date: .abbreviated, time: .shortened))
+                        .font(.subheadline)
+                        .foregroundColor(.white)
+                }
+                HStack(alignment: .top, spacing: 16) {
+                    VStack {
+                        ForEach(match.home_team.split(separator: " "), id: \.self) { word in
+                            Text(String(word))
+                                .font(.title.bold())
+                                .foregroundColor(.white)
+                        }
                     }
-                    HStack {
-                        Text(match.home_team)
-                            .font(.title2)
-                            .bold()
-                        Spacer()
+                    Spacer()
+                    VStack {
                         Text("vs")
-                            .foregroundColor(.gray)
-                        Spacer()
-                        Text(match.away_team)
-                            .font(.title2)
-                            .bold()
+                            .font(.title.bold())
+                            .foregroundColor(.white)
+                            .frame(width: 50, height: 50)
+                            .background(Circle().fill(Color.black.opacity(0.2)))
+                            .overlay(Circle().stroke(Color.white, lineWidth: 1))
+                            .padding(.top, 8)
+                    }
+                    Spacer()
+                    VStack {
+                        ForEach(match.away_team.split(separator: " "), id: \.self) { word in
+                            Text(String(word))
+                                .font(.title.bold())
+                                .foregroundColor(.white)
+                        }
                     }
                 }
                 .padding(.horizontal)
                 
-                // 🔀 Sort Picker
-                Picker("Sort By", selection: $sortBy) {
-                    Text("Default").tag(SortBy.none)
-                    Text("Sort by Home").tag(SortBy.outcome1)
-                    Text("Sort by Away").tag(SortBy.outcome2)
+                // 🔀 Sort Button Group (Custom Style)
+                HStack(spacing: 12) {
+                    ForEach([SortBy.none, SortBy.outcome1, SortBy.outcome2], id: \.self) { option in
+                        let label: String = {
+                            switch option {
+                            case .none: return "Default"
+                            case .outcome1: return "Sort by Home"
+                            case .outcome2: return "Sort by Away"
+                            }
+                        }()
+                        
+                        Button(action: {
+                            sortBy = option
+                        }) {
+                            Text(label)
+                                .font(.subheadline)
+                                .padding(.vertical, 8)
+                                .padding(.horizontal, 16)
+                                .background(sortBy == option ? Color("WimbledonBackground").opacity(0.3) : Color.clear)
+                                .foregroundColor(Color("RoseGold"))
+                                .overlay(
+                                    RoundedRectangle(cornerRadius: 8)
+                                        .stroke(Color("RoseGold"), lineWidth: 1)
+                                )
+                                .cornerRadius(8)
+                        }
+                    }
                 }
-                .pickerStyle(.segmented)
-                .padding()
+                .padding(.horizontal)
                 
                 // 📊 Bookmakers
                 let sortedBookmakers = match.bookmakers.sorted { a, b in
@@ -82,25 +116,38 @@ struct MatchOddsDetailView: View {
                         HStack {
                             VStack(alignment: .leading) {
                                 Text(match.home_team)
-                                    .font(.caption)
+                                    .font(.footnote)
+                                    .foregroundColor(Color("RoseGold"))
+                                    .bold()
                                 Text(String(format: "%.2f", homeOutcome?.price ?? 0))
                                     .bold()
+                                    .foregroundColor(Color("RoseGold"))
+                                
                             }
                             Spacer()
                             Text(bookmaker.title)
                                 .font(.footnote)
-                                .foregroundColor(.secondary)
+                                .foregroundColor(Color("RoseGold"))
+                                .bold()
+                            
                             Spacer()
                             VStack(alignment: .trailing) {
                                 Text(match.away_team)
-                                    .font(.caption)
+                                    .font(.footnote)
+                                    .foregroundColor(Color("RoseGold"))
+                                    .bold()
                                 Text(String(format: "%.2f", awayOutcome?.price ?? 0))
                                     .bold()
+                                    .foregroundColor(Color("RoseGold"))
                             }
                         }
                         .padding()
-                        .background(Color(.systemGray6))
+                        .background(Color("WimbledonBackground").opacity(0.3))
                         .cornerRadius(10)
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 10)
+                                .stroke(Color("RoseGold"), lineWidth: 1)
+                        )
                         .padding(.horizontal)
                     }
                 }
@@ -108,8 +155,93 @@ struct MatchOddsDetailView: View {
             }
             .navigationTitle("Odds Detail")
         }
+        .padding(.top)
+        .background(Color("DarkPurple"))
     }
 }
-//#Preview {
-//    MatchOddsDetailView()
-//}
+#Preview {
+    MatchOddsDetailView(match: OddsResponse(
+        id: "match1",
+        sport_title: "ATP Tennis",
+        commence_time: "2025-06-05T15:00:00Z",
+        home_team: "Carlos Alcaraz",
+        away_team: "Novak Djokovic",
+        bookmakers: [
+            Bookmaker(
+                key: "bet365",
+                title: "Bet365",
+                last_update: "2025-06-03T10:00:00Z",
+                link: nil,
+                markets: [
+                    Market(
+                        key: "h2h",
+                        outcomes: [
+                            Outcome(name: "Carlos Alcaraz", price: 1.85, link: nil),
+                            Outcome(name: "Novak Djokovic", price: 1.95, link: nil)
+                        ]
+                    )
+                ]
+            ),
+            Bookmaker(
+                key: "williamhill",
+                title: "William Hill",
+                last_update: "2025-06-03T10:05:00Z",
+                link: nil,
+                markets: [
+                    Market(
+                        key: "h2h",
+                        outcomes: [
+                            Outcome(name: "Carlos Alcaraz", price: 1.80, link: nil),
+                            Outcome(name: "Novak Djokovic", price: 2.00, link: nil)
+                        ]
+                    )
+                ]
+            ),
+            Bookmaker(
+                key: "unibet",
+                title: "Unibet",
+                last_update: "2025-06-03T10:10:00Z",
+                link: nil,
+                markets: [
+                    Market(
+                        key: "h2h",
+                        outcomes: [
+                            Outcome(name: "Carlos Alcaraz", price: 1.90, link: nil),
+                            Outcome(name: "Novak Djokovic", price: 1.90, link: nil)
+                        ]
+                    )
+                ]
+            ),
+            Bookmaker(
+                key: "pinnacle",
+                title: "Pinnacle",
+                last_update: "2025-06-03T10:15:00Z",
+                link: nil,
+                markets: [
+                    Market(
+                        key: "h2h",
+                        outcomes: [
+                            Outcome(name: "Carlos Alcaraz", price: 1.95, link: nil),
+                            Outcome(name: "Novak Djokovic", price: 1.85, link: nil)
+                        ]
+                    )
+                ]
+            ),
+            Bookmaker(
+                key: "draftkings",
+                title: "DraftKings",
+                last_update: "2025-06-03T10:20:00Z",
+                link: nil,
+                markets: [
+                    Market(
+                        key: "h2h",
+                        outcomes: [
+                            Outcome(name: "Carlos Alcaraz", price: 2.00, link: nil),
+                            Outcome(name: "Novak Djokovic", price: 1.80, link: nil)
+                        ]
+                    )
+                ]
+            )
+        ]
+    ))
+}
